@@ -36,7 +36,9 @@ public abstract class BaseTest {
 
     @Before
     public void createDriver() {
-        driver = new RemoteWebDriver(service.getUrl(), new ChromeOptions());
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--start-maximized");
+        driver = new RemoteWebDriver(service.getUrl(), options);
     }
 
     @After
