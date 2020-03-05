@@ -1,24 +1,22 @@
 package pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.ElementNotInteractableException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.*;
 
-public abstract class BasePage {
-    protected WebDriverWait smallWait;
-    protected WebDriverWait longWait;
-    protected WebDriverWait wait5sec;
-    protected WebDriverWait wait3sec;
-    protected final String ICON_LIVE_VIDEO = "c-events__ico c-events__ico_video";
+import java.util.ArrayList;
+
+abstract class BasePage {
 
     void clickButton(By by, WebDriver webDriver) {
         webDriver.findElement(by).click();
     }
 
     boolean checkIsActiveFilterByParent(By by, WebDriver webDriver) {
-        String classCss = webDriver.findElement(by).findElement(By.xpath("../..")).getAttribute("class");
-        return classCss.contains("active");
+        try {
+            String classCss = webDriver.findElement(by).findElement(By.xpath("../..")).getAttribute("class");
+            return classCss.contains("active");
+        } catch (NoSuchElementException e) {
+            return false;
+        }
     }
 
     boolean checkIsActiveFilter(By by, WebDriver webDriver) {
@@ -32,5 +30,21 @@ public abstract class BasePage {
         } catch (ElementNotInteractableException e) {
             return false;
         }
+    }
+
+    boolean isElementPresentChild(By by, WebElement webElement) {
+        try {
+            return webElement.findElement(by).isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
+    ArrayList<WebElement> getListOfWebElement(WebDriver webDriver, By by) {
+        return new ArrayList<WebElement>(webDriver.findElements(by));
+    }
+
+    ArrayList<WebElement> getListOfWebElementChild(WebElement webElement, By by) {
+        return new ArrayList<WebElement>(webElement.findElements(by));
     }
 }

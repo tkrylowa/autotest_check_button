@@ -19,7 +19,10 @@ public class MainPage extends BasePage {
     private By notificationPopUp = By.id("pushfree");
     private By notificationPopUpBlock = By.xpath("//div[@id='pushfree']//a");
     private By nameOfChampionship = By.xpath(".//div[@class='c-events__name']//a[@class='c-events__liga']");
-    private By contentUl = By.xpath("//div[@class='c-events__item c-events__item_head greenBack']");
+    //    private By contentUl = By.xpath("//div[@class='c-events__item c-events__item_head greenBack']");
+    private By contentUl = By.xpath("//div[@class='dashboard-champ-content']");
+    private By contentName = By.xpath("//div[@class='c-events__item c-events__item_head greenBack']");
+    private By contentRow = By.xpath(".//div[@class='c-events__item c-events__item_col']");
     private By liveIcon = By.xpath(".//div[@class='c-events__ico c-events__ico_video']");
 
     public void clickLiniaTopMenu(WebDriver webDriver) {
@@ -86,29 +89,45 @@ public class MainPage extends BasePage {
         return webElement.findElement(nameOfChampionship).getAttribute("title");
     }
 
-    public void selectAllAndOnlyLive(WebDriver webDriver) {
+    public void selectAllAndOnlyLive(WebDriver webDriver, boolean isMainPage) {
         safeAlertDismiss(webDriver);
         clickSportFilter(webDriver, "All", true);
-        clickLiveIcon(webDriver, true);
-        clickButton(By.className("sb-t-cell"), webDriver);
+        clickLiveIcon(webDriver, false);
+        if (isMainPage)
+            clickButton(By.className("sb-t-cell"), webDriver);
     }
 
     public ArrayList<WebElement> getNameOfChampionship(WebDriver webDriver) {
-//        ArrayList<WebElement> content = new ArrayList<WebElement>(webDriver.findElements(contentUl));
-//        for (WebElement element : content) {
-//            System.out.println("Name of content row: " + getNameOfChampionship(element));
-//        }
-        return new ArrayList<WebElement>(webDriver.findElements(contentUl));
+        return getListOfWebElement(webDriver, contentName);
     }
 
-    public void checkIcon(WebDriver webDriver, ArrayList<WebElement> content) {
+    private boolean isMoreThanOneRowInContent(WebElement webElement) {
+        return getListOfWebElementChild(webElement, contentRow).size() > 1;
+    }
+
+    public void checkIcon(ArrayList<WebElement> content) {
+        //todo scroll down!
         for (WebElement element : content) {
-            if (isElementPresent(liveIcon, webDriver)) {
-                System.out.println("Name of content row: " + getNameOfChampionship(element));
-                System.out.println("Icon is presented");
+            System.out.println("Name of content row: " + getNameOfChampionship(element));
+            boolean isIconAppear;
+            if (isMoreThanOneRowInContent(element.findElement(By.xpath("..//.")))) {
+                ArrayList<WebElement> rowOfContent
+                        = getListOfWebElementChild(element.findElement(By.xpath("..//.")), contentRow);
+                for (WebElement elementRow : rowOfContent) {
+                    isIconAppear = isElementPresentChild(liveIcon, elementRow.findElement(By.xpath("..//.")));
+//                    Assert.assertTrue("Icon is presented", isIconAppear);
+                    if (!isIconAppear) {
+                        System.out.println("Icon is no presented");
+                    } else
+                        System.out.println("Icon is presented");
+                }
             } else {
-                System.out.println("Name of content row: " + getNameOfChampionship(element));
-                System.out.println("Icon is no presented");
+                isIconAppear = isElementPresentChild(liveIcon, element.findElement(By.xpath("..//.")));
+//                Assert.assertTrue("Icon is no presented", isIconAppear);
+                if (!isIconAppear) {
+                    System.out.println("Icon is no presented");
+                } else
+                    System.out.println("Icon is presented");
             }
         }
     }

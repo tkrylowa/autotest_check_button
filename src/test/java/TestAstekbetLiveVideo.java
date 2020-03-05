@@ -11,15 +11,18 @@ public class TestAstekbetLiveVideo extends BaseTest {
         webDriver.get("https://astekbet55.com");
         MainPage mainPage = new MainPage();
         mainPage.safeAlertDismiss(webDriver);
-        mainPage.selectAllAndOnlyLive(webDriver);
-//        mainPage.getNameOfChampionship(webDriver);
-        mainPage.checkIcon(webDriver, mainPage.getNameOfChampionship(webDriver));
+        mainPage.selectAllAndOnlyLive(webDriver, true);
+        mainPage.checkIcon(mainPage.getNameOfChampionship(webDriver));
     }
 
     @Test
     public void testLiveVideoInLovePage() {
-        getDriver().get("https://astekbet55.com");
-        new MainPage().safeAlertDismiss(getDriver());
-        new MainPage().clickLiveTopMenu(getDriver());
+        webDriver = getDriver();
+        webDriver.get("https://astekbet55.com");
+        MainPage mainPage = new MainPage();
+        mainPage.safeAlertDismiss(webDriver);
+        mainPage.clickLiveTopMenu(webDriver);
+        mainPage.selectAllAndOnlyLive(webDriver, false);
+        mainPage.checkIcon(mainPage.getNameOfChampionship(webDriver));
     }
 }
