@@ -19,42 +19,12 @@ public class MainPage extends BasePage {
     private By notificationPopUp = By.id("pushfree");
     private By notificationPopUpBlock = By.xpath("//div[@id='pushfree']//a");
     private By nameOfChampionship = By.xpath(".//div[@class='c-events__name']//a[@class='c-events__liga']");
-    //    private By contentUl = By.xpath("//div[@class='c-events__item c-events__item_head greenBack']");
-    private By contentUl = By.xpath("//div[@class='dashboard-champ-content']");
     private By contentName = By.xpath("//div[@class='c-events__item c-events__item_head greenBack']");
     private By contentRow = By.xpath(".//div[@class='c-events__item c-events__item_col']");
     private By liveIcon = By.xpath(".//div[@class='c-events__ico c-events__ico_video']");
 
-    public void clickLiniaTopMenu(WebDriver webDriver) {
-        clickButton(liniaBtn, webDriver);
-    }
-
     public void clickLiveTopMenu(WebDriver webDriver) {
         clickButton(liveBtn, webDriver);
-    }
-
-    public void clickPromoTopMenu(WebDriver webDriver) {
-        clickButton(promoBtn, webDriver);
-    }
-
-    public void clickSlotsTopMenu(WebDriver webDriver) {
-        clickButton(slotsBtn, webDriver);
-    }
-
-    public void clickLiveCasinoTopMenu(WebDriver webDriver) {
-        clickButton(liveCasinoBtn, webDriver);
-    }
-
-    public void clickGamesTopMenu(WebDriver webDriver) {
-        clickButton(gamesBtn, webDriver);
-    }
-
-    public void clickVirtualSportsTopMenu(WebDriver webDriver) {
-        clickButton(vertualSportBtn, webDriver);
-    }
-
-    public void clickMoreTopMenu(WebDriver webDriver) {
-        clickButton(moreBtn, webDriver);
     }
 
     private void clickLiveIcon(WebDriver webDriver, boolean isNeedActive) {
@@ -76,7 +46,6 @@ public class MainPage extends BasePage {
     }
 
     private void clickSportFilter(WebDriver webDriver, String filtersName, boolean isNeedActive) {
-        //add click '>' while element is no present by name
         String SPORT_FILTER_PATH = "//div[contains(@class,'b-filters__item')]";
         By byFilter = By.xpath(
                 String.format("%s//div[text()='%s']", SPORT_FILTER_PATH, filtersName));
@@ -85,7 +54,8 @@ public class MainPage extends BasePage {
             webDriver.findElement(byFilter).click();
     }
 
-    private String getNameOfChampionship(WebElement webElement) {
+    private String getListOfNamesOfChampionship(WebElement webElement, WebDriver webDriver) {
+        scrollToElement(webDriver, webElement);
         return webElement.findElement(nameOfChampionship).getAttribute("title");
     }
 
@@ -97,7 +67,7 @@ public class MainPage extends BasePage {
             clickButton(By.className("sb-t-cell"), webDriver);
     }
 
-    public ArrayList<WebElement> getNameOfChampionship(WebDriver webDriver) {
+    public ArrayList<WebElement> getListOfNamesOfChampionship(WebDriver webDriver) {
         return getListOfWebElement(webDriver, contentName);
     }
 
@@ -105,16 +75,15 @@ public class MainPage extends BasePage {
         return getListOfWebElementChild(webElement, contentRow).size() > 1;
     }
 
-    public void checkIcon(ArrayList<WebElement> content) {
-        //todo scroll down!
+    public void checkIcon(ArrayList<WebElement> content, WebDriver webDriver) {
         for (WebElement element : content) {
-            System.out.println("Name of content row: " + getNameOfChampionship(element));
+            System.out.println("Name of content row: " + getListOfNamesOfChampionship(element, webDriver));
             boolean isIconAppear;
             if (isMoreThanOneRowInContent(element.findElement(By.xpath("..//.")))) {
                 ArrayList<WebElement> rowOfContent
                         = getListOfWebElementChild(element.findElement(By.xpath("..//.")), contentRow);
                 for (WebElement elementRow : rowOfContent) {
-                    isIconAppear = isElementPresentChild(liveIcon, elementRow.findElement(By.xpath("..//.")));
+                    isIconAppear = isElementPresentChild(liveIcon, elementRow.findElement(By.xpath("..//.")), webDriver);
 //                    Assert.assertTrue("Icon is presented", isIconAppear);
                     if (!isIconAppear) {
                         System.out.println("Icon is no presented");
@@ -122,7 +91,7 @@ public class MainPage extends BasePage {
                         System.out.println("Icon is presented");
                 }
             } else {
-                isIconAppear = isElementPresentChild(liveIcon, element.findElement(By.xpath("..//.")));
+                isIconAppear = isElementPresentChild(liveIcon, element.findElement(By.xpath("..//.")), webDriver);
 //                Assert.assertTrue("Icon is no presented", isIconAppear);
                 if (!isIconAppear) {
                     System.out.println("Icon is no presented");

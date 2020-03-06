@@ -24,16 +24,9 @@ abstract class BasePage {
         return classCss.contains("active");
     }
 
-    boolean isElementPresent(By by, WebDriver webDriver) {
+    boolean isElementPresentChild(By by, WebElement webElement, WebDriver webDriver) {
         try {
-            return webDriver.findElement(by).isEnabled();
-        } catch (ElementNotInteractableException e) {
-            return false;
-        }
-    }
-
-    boolean isElementPresentChild(By by, WebElement webElement) {
-        try {
+            scrollToElement(webDriver, webElement);
             return webElement.findElement(by).isDisplayed();
         } catch (NoSuchElementException e) {
             return false;
@@ -46,5 +39,19 @@ abstract class BasePage {
 
     ArrayList<WebElement> getListOfWebElementChild(WebElement webElement, By by) {
         return new ArrayList<WebElement>(webElement.findElements(by));
+    }
+
+    void scrollToElement(WebDriver webDriver, WebElement webElement) {
+        try {
+            if (webElement.isDisplayed()) {
+                ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView();"
+                        , webElement);
+            } else {
+                System.out.println("Element is no presented any more");
+            }
+        } catch (StaleElementReferenceException e) {
+            System.out.println("Element is no presented any more");
+        }
+
     }
 }

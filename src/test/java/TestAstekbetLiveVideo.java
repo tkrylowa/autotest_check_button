@@ -12,7 +12,7 @@ public class TestAstekbetLiveVideo extends BaseTest {
         MainPage mainPage = new MainPage();
         mainPage.safeAlertDismiss(webDriver);
         mainPage.selectAllAndOnlyLive(webDriver, true);
-        mainPage.checkIcon(mainPage.getNameOfChampionship(webDriver));
+        mainPage.checkIcon(mainPage.getListOfNamesOfChampionship(webDriver), webDriver);
     }
 
     @Test
@@ -23,6 +23,6 @@ public class TestAstekbetLiveVideo extends BaseTest {
         mainPage.safeAlertDismiss(webDriver);
         mainPage.clickLiveTopMenu(webDriver);
         mainPage.selectAllAndOnlyLive(webDriver, false);
-        mainPage.checkIcon(mainPage.getNameOfChampionship(webDriver));
+        mainPage.checkIcon(mainPage.getListOfNamesOfChampionship(webDriver), webDriver);
     }
 }
