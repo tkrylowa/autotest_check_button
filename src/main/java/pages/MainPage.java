@@ -40,8 +40,7 @@ public class MainPage extends BasePage {
             if (webDriver.findElement(notificationPopUp).isDisplayed()) {
                 webDriver.findElement(notificationPopUpBlock).click();
             }
-        } catch (NoSuchElementException ignored) {
-        } catch (TimeoutException ignored) {
+        } catch (NoSuchElementException | TimeoutException ignored) {
         }
     }
 
@@ -56,7 +55,7 @@ public class MainPage extends BasePage {
 
     private String getListOfNamesOfChampionship(WebElement webElement, WebDriver webDriver) {
         scrollToElement(webDriver, webElement);
-        return webElement.findElement(nameOfChampionship).getAttribute("title");
+        return getTitle(webElement, nameOfChampionship);
     }
 
     public void selectAllAndOnlyLive(WebDriver webDriver, boolean isMainPage) {
@@ -75,8 +74,15 @@ public class MainPage extends BasePage {
         return getListOfWebElementChild(webElement, contentRow).size() > 1;
     }
 
-    public void checkIcon(ArrayList<WebElement> content, WebDriver webDriver) {
-        for (WebElement element : content) {
+    public void checkIconForNewContent(ArrayList<WebElement> currentView, ArrayList<WebElement> oldView, WebDriver webDriver) {
+        if (differentView(currentView, oldView, nameOfChampionship) != null) {
+            System.out.println("New row appears!");
+            checkIcon(webDriver, currentView);
+        }
+    }
+
+    public void checkIcon(WebDriver webDriver, ArrayList<WebElement> currentContent) {
+        for (WebElement element : currentContent) {
             System.out.println("Name of content row: " + getListOfNamesOfChampionship(element, webDriver));
             boolean isIconAppear;
             if (isMoreThanOneRowInContent(element.findElement(By.xpath("..//.")))) {

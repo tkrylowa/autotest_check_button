@@ -3,6 +3,7 @@ package pages;
 import org.openqa.selenium.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 abstract class BasePage {
 
@@ -34,11 +35,11 @@ abstract class BasePage {
     }
 
     ArrayList<WebElement> getListOfWebElement(WebDriver webDriver, By by) {
-        return new ArrayList<WebElement>(webDriver.findElements(by));
+        return new ArrayList<>(webDriver.findElements(by));
     }
 
     ArrayList<WebElement> getListOfWebElementChild(WebElement webElement, By by) {
-        return new ArrayList<WebElement>(webElement.findElements(by));
+        return new ArrayList<>(webElement.findElements(by));
     }
 
     void scrollToElement(WebDriver webDriver, WebElement webElement) {
@@ -52,6 +53,27 @@ abstract class BasePage {
         } catch (StaleElementReferenceException e) {
             System.out.println("Element is no presented any more");
         }
+    }
 
+    String getTitle(WebElement webElement, By by) {
+        return webElement.findElement(by).getAttribute("title");
+    }
+
+    ArrayList<WebElement> differentView(ArrayList<WebElement> currentView, ArrayList<WebElement> oldView, By by) {
+        ArrayList<WebElement> different = new ArrayList<>();
+        currentView.sort(Comparator.comparing(o -> o.findElement(by).getAttribute("title")));
+        oldView.sort(Comparator.comparing(o -> o.findElement(by).getAttribute("title")));
+        int i = 0;
+        if (!currentView.containsAll(oldView)) {
+            for (WebElement element : currentView) {
+                if (!getTitle(oldView.get(i), by).equalsIgnoreCase(getTitle(element, by))) {
+                    different.add(element);
+                }
+            }
+        }
+        if (different.size() != 0)
+            return different;
+        else
+            return null;
     }
 }
