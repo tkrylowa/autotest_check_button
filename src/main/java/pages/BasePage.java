@@ -1,11 +1,14 @@
 package pages;
 
 import org.openqa.selenium.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 
 abstract class BasePage {
+    static final Logger LOGGER = LoggerFactory.getLogger(BasePage.class);
 
     void clickButton(By by, WebDriver webDriver) {
         webDriver.findElement(by).click();
@@ -16,13 +19,19 @@ abstract class BasePage {
             String classCss = webDriver.findElement(by).findElement(By.xpath("../..")).getAttribute("class");
             return classCss.contains("active");
         } catch (NoSuchElementException e) {
+            LOGGER.info(e.toString());
             return false;
         }
     }
 
     boolean checkIsActiveFilter(By by, WebDriver webDriver) {
-        String classCss = webDriver.findElement(by).getAttribute("class");
-        return classCss.contains("active");
+        try {
+            String classCss = webDriver.findElement(by).getAttribute("class");
+            return classCss.contains("active");
+        } catch (NoSuchElementException e) {
+            LOGGER.info(e.toString());
+            return false;
+        }
     }
 
     boolean isElementPresentChild(By by, WebElement webElement, WebDriver webDriver) {
@@ -30,6 +39,7 @@ abstract class BasePage {
             scrollToElement(webDriver, webElement);
             return webElement.findElement(by).isDisplayed();
         } catch (NoSuchElementException e) {
+            LOGGER.info(e.toString());
             return false;
         }
     }
@@ -48,15 +58,24 @@ abstract class BasePage {
                 ((JavascriptExecutor) webDriver).executeScript("arguments[0].scrollIntoView();"
                         , webElement);
             } else {
-                System.out.println("Element is no presented any more");
+                LOGGER.info("Element is no presented any more");
             }
         } catch (StaleElementReferenceException e) {
-            System.out.println("Element is no presented any more");
+            LOGGER.error("Element is no presented any more");
         }
     }
 
     String getTitle(WebElement webElement, By by) {
+        sleepOnSec(1);
         return webElement.findElement(by).getAttribute("title");
+    }
+
+    private void sleepOnSec(int seconds) {
+        try {
+            Thread.sleep(seconds * 1000);
+        } catch (InterruptedException e) {
+            LOGGER.info(e.toString());
+        }
     }
 
     ArrayList<WebElement> differentView(ArrayList<WebElement> currentView, ArrayList<WebElement> oldView, By by) {

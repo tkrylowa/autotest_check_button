@@ -1,5 +1,6 @@
 package pages;
 
+import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -7,14 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.ArrayList;
 
 public class MainPage extends BasePage {
-    private By liniaBtn = By.id("line_href");
     private By liveBtn = By.id("live_href");
-    private By promoBtn = By.id("1xbonus");
-    private By slotsBtn = By.xpath("//a[@href='slots/' and @class='main-item']");
-    private By liveCasinoBtn = By.xpath("//a[@href='casino/' and @class='main-item main-item_casino ']");
-    private By gamesBtn = By.id("1xgames");
-    private By vertualSportBtn = By.id("live_href");
-    private By moreBtn = By.id("live_href");
     private By liveIconBtn = By.xpath("//div[contains(@class,'b-filters__item b-filters__item_alone')]");
     private By notificationPopUp = By.id("pushfree");
     private By notificationPopUpBlock = By.xpath("//div[@id='pushfree']//a");
@@ -22,6 +16,7 @@ public class MainPage extends BasePage {
     private By contentName = By.xpath("//div[@class='c-events__item c-events__item_head greenBack']");
     private By contentRow = By.xpath(".//div[@class='c-events__item c-events__item_col']");
     private By liveIcon = By.xpath(".//div[@class='c-events__ico c-events__ico_video']");
+    private By parentPath = By.xpath("..//.");
 
     public void clickLiveTopMenu(WebDriver webDriver) {
         clickButton(liveBtn, webDriver);
@@ -40,7 +35,8 @@ public class MainPage extends BasePage {
             if (webDriver.findElement(notificationPopUp).isDisplayed()) {
                 webDriver.findElement(notificationPopUpBlock).click();
             }
-        } catch (NoSuchElementException | TimeoutException ignored) {
+        } catch (NoSuchElementException | StaleElementReferenceException | TimeoutException ignored) {
+            LOGGER.info("Element is no presented");
         }
     }
 
@@ -74,35 +70,32 @@ public class MainPage extends BasePage {
         return getListOfWebElementChild(webElement, contentRow).size() > 1;
     }
 
-    public void checkIconForNewContent(ArrayList<WebElement> currentView, ArrayList<WebElement> oldView, WebDriver webDriver) {
-        if (differentView(currentView, oldView, nameOfChampionship) != null) {
-            System.out.println("New row appears!");
-            checkIcon(webDriver, currentView);
-        }
+    public boolean isNewRowAppear(ArrayList<WebElement> currentView, ArrayList<WebElement> oldView) {
+        return differentView(currentView, oldView, nameOfChampionship) != null;
     }
 
     public void checkIcon(WebDriver webDriver, ArrayList<WebElement> currentContent) {
         for (WebElement element : currentContent) {
-            System.out.println("Name of content row: " + getListOfNamesOfChampionship(element, webDriver));
+            LOGGER.info("Name of content row: " + getListOfNamesOfChampionship(element, webDriver));
             boolean isIconAppear;
-            if (isMoreThanOneRowInContent(element.findElement(By.xpath("..//.")))) {
+            if (isMoreThanOneRowInContent(element.findElement(parentPath))) {
                 ArrayList<WebElement> rowOfContent
-                        = getListOfWebElementChild(element.findElement(By.xpath("..//.")), contentRow);
+                        = getListOfWebElementChild(element.findElement(parentPath), contentRow);
                 for (WebElement elementRow : rowOfContent) {
-                    isIconAppear = isElementPresentChild(liveIcon, elementRow.findElement(By.xpath("..//.")), webDriver);
-//                    Assert.assertTrue("Icon is presented", isIconAppear);
-                    if (!isIconAppear) {
-                        System.out.println("Icon is no presented");
-                    } else
-                        System.out.println("Icon is presented");
+                    isIconAppear = isElementPresentChild(liveIcon, elementRow.findElement(parentPath), webDriver);
+                    Assert.assertTrue("Icon is presented", isIconAppear);
+//                    if (!isIconAppear) {
+//                        LOGGER.info("Icon is no presented");
+//                    } else
+//                        LOGGER.info("Icon is presented");
                 }
             } else {
                 isIconAppear = isElementPresentChild(liveIcon, element.findElement(By.xpath("..//.")), webDriver);
-//                Assert.assertTrue("Icon is no presented", isIconAppear);
-                if (!isIconAppear) {
-                    System.out.println("Icon is no presented");
-                } else
-                    System.out.println("Icon is presented");
+                Assert.assertTrue("Icon is no presented", isIconAppear);
+//                if (!isIconAppear) {
+//                    LOGGER.info("Icon is no presented");
+//                } else
+//                    LOGGER.info("Icon is presented");
             }
         }
     }
