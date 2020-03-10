@@ -1,6 +1,5 @@
-package StepDefinition;
+package stepDefinition.hooks;
 
-import core.TestRunListener;
 import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
@@ -13,13 +12,13 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import steps.BaseTest;
+import stepDefinition.steps.Steps;
 
 import java.io.File;
 import java.io.IOException;
 
 public class Hooks {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TestRunListener.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Hooks.class);
     private final static String PATH = new File("").getAbsolutePath();
     private static ChromeDriverService service;
     private static WebDriver driver;
@@ -38,20 +37,20 @@ public class Hooks {
     }
 
     @Before
-    public void beforeTestStart() throws IOException {
+    public void beforeScenario() throws IOException {
         createAndStartService();
         createDriver();
     }
 
     @After
-    public void testEnd(Scenario scenario) {
+    public void afterScenario(Scenario scenario) {
         LOGGER.info("Test finished: " + scenario);
         LOGGER.info("--------------------------------------");
         if (scenario.isFailed()) {
             captureScreenshot("faildedTest"
                     + scenario.getName()
                     .replace("(", "_")
-                    .replace(")", "_"), BaseTest.getDriver());
+                    .replace(")", "_"), Steps.getDriver());
         }
         stopServerQuitDriver();
     }
