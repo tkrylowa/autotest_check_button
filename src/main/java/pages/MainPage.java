@@ -57,7 +57,7 @@ public class MainPage extends BasePage {
     public void selectAllAndOnlyLive(WebDriver webDriver, boolean isMainPage) {
         safeAlertDismiss(webDriver);
         clickSportFilter(webDriver, "All", true);
-        clickLiveIcon(webDriver, false);
+        clickLiveIcon(webDriver, true);
         if (isMainPage)
             clickButton(By.className("sb-t-cell"), webDriver);
     }
