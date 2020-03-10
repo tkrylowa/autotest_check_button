@@ -83,7 +83,7 @@ public class MainPage extends BasePage {
                         = getListOfWebElementChild(element.findElement(parentPath), contentRow);
                 for (WebElement elementRow : rowOfContent) {
                     isIconAppear = isElementPresentChild(liveIcon, elementRow.findElement(parentPath), webDriver);
-                    Assert.assertTrue("Icon is presented", isIconAppear);
+                    Assert.assertTrue("Icon is no presented", isIconAppear);
 //                    if (!isIconAppear) {
 //                        LOGGER.info("Icon is no presented");
 //                    } else
