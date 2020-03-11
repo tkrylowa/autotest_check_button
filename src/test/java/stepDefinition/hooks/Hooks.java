@@ -44,7 +44,7 @@ public class Hooks {
 
     @After
     public void afterScenario(Scenario scenario) {
-        LOGGER.info("Test finished: " + scenario);
+        LOGGER.info("Test finished: " + scenario.getName());
         LOGGER.info("--------------------------------------");
         if (scenario.isFailed()) {
             captureScreenshot("faildedTest"

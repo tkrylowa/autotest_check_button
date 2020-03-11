@@ -4,9 +4,8 @@ import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        features = "src/test/java/features",
+        features = "src/test/java/resources/features",
         glue = {"stepDefinition.steps", "stepDefinition.hooks"},
-        plugin = {"html:target/cucumber-report/smoketest", "json:target/cucumber.json"},
-        dryRun = true)
+        plugin = {"pretty", "html:reports/test-report"})
 public class AstekbetLiveVideoTest {
 }

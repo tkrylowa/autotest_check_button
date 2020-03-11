@@ -1,5 +1,6 @@
 package stepDefinition.steps;
 
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -22,28 +23,28 @@ public class Steps {
         return webDriver;
     }
 
-    @Given("^open https://astekbet(\\d+)\\.com$")
+    @Given("^open astekbet site$")
     public void openUrl() {
         webDriver = Hooks.getDriver();
         webDriver.get("https://astekbet55.com");
     }
 
-    @Given("^dismiss alert$")
+    @And("^dismiss alert$")
     public void safeAlertDismiss() {
         mainPage.safeAlertDismiss(webDriver);
     }
 
-    @Given("^Click button 'live' in top menu$")
+    @And("^Click button 'live' in top menu$")
     public void clickLiveTopMenu() {
         mainPage.clickLiveTopMenu(webDriver);
     }
 
-    @Given("^select necessary filters in live page: all sports, live-game$")
+    @And("^select necessary filters in live page: all sports, live-game$")
     public void selectAllAndOnlyLiveLivePage() {
         mainPage.selectAllAndOnlyLive(webDriver, false);
     }
 
-    @Given("^select necessary filters in main page: all sports, live-game$")
+    @And("^select necessary filters in main page: all sports, live-game$")
     public void selectAllAndOnlyLiveMainPage() {
         mainPage.selectAllAndOnlyLive(webDriver, true);
     }
